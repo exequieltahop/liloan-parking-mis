@@ -5,13 +5,13 @@ use Illuminate\Support\Facades\Route;
 
 
 // guest
-Route::get('/', function () {
-    return view('pages.guest.login');
-})->name('login');
+// Route::get('/', function () {
+//     return view('pages.guest.login');
+// })->name('login');
 
 // auth
-Route::get('/dashboard', function () {
+Route::get('/', function () {
     return view('pages.auth.dashbboard');
-})->name('dashboard')->middleware('authChecker');
+})->name('dashboard');
 
 Route::post('/login-user', [GuestController::class, 'processLogin'])->name('login-user');

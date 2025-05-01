@@ -17,19 +17,19 @@
     {{$slot}}
 
     {{-- alerts --}}
-    @if (session('error'))
-        <script>
-            document.addEventListener('DOMContentLoaded', ()=>{
-                toastr.error({{session('error')}}, "Error");
+    @if (session()->has('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', ()=>{
+                toastr.error("{{session('error')}}", "Error");
             });
-        </script>
+    </script>
     @endif
-    @if (session('success'))
-        <script>
-            document.addEventListener('DOMContentLoaded', ()=>{
-                toastr.success({{session('success')}}, "Success");
+    @if (session()->has('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', ()=>{
+                toastr.success("{{session('success')}}", "Success");
             });
-        </script>
+    </script>
     @endif
 </body>
 

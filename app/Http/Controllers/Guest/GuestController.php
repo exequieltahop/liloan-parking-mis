@@ -15,8 +15,6 @@ class GuestController extends Controller
     public function processLogin(Request $request)
     {
         try {
-            throw new Exception("Error Processing Request", 1);
-
             // validator
             $validator = Validator::make($request->all(), [
                 'email' => ['required', 'email'],

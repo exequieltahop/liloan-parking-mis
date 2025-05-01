@@ -13,23 +13,35 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
-    {{$slot}}
+<body class="bg-light">
+    <div class="d-flex p-4 gap-4">
+        @include('extensions.sidebar')
+
+        {{-- header & main wrapper --}}
+        <div class="d-flex flex-column w-100">
+            {{-- header --}}
+            @include('extensions.header')
+
+            {{-- main --}}
+            {{$slot}}
+        </div>
+    </div>
 
     {{-- alerts --}}
+    @if (session()->has('error'))
     <script>
         document.addEventListener('DOMContentLoaded', ()=>{
-            // errors
-            @if (session('error'))
                 toastr.error({{session('error')}}, "Error");
-            @endif
-
-            // success
-            @if (session('success'))
-                toastr.success({{session('success')}}, "Success");
-            @endif
-        });
+            });
     </script>
+    @endif
+    @if (session()->has('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', ()=>{
+                toastr.success({{session('success')}}, "Success");
+            });
+    </script>
+    @endif
 </body>
 
 </html>
