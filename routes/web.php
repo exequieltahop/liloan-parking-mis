@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Guest\GuestController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,5 +14,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('pages.auth.dashbboard');
 })->name('dashboard');
+Route::get('/getParkingSlots', [DashboardController::class, 'getParkingSlots']);
 
 Route::post('/login-user', [GuestController::class, 'processLogin'])->name('login-user');

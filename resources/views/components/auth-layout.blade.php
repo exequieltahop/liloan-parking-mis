@@ -11,6 +11,12 @@
     <title>{{$title}}</title>
     {{-- vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        .text-primary{
+            color: rgb(0, 0, 41) !important;
+        }
+    </style>
 </head>
 
 <body class="bg-light">
