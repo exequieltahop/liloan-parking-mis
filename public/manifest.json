@@ -1,0 +1,17 @@
+{
+    "name": "Liloan Port Parking Information System",
+    "short_name": "LPPIS",
+    "start_url": "/index.php",
+    "background_color": "#000029",
+    "description": "install LPPIS",
+    "display": "fullscreen",
+    "theme_color": "#000029",
+    "icons": [
+        {
+            "src": "parking-logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

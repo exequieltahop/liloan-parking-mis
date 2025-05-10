@@ -38,7 +38,7 @@ class GuestController extends Controller
             ]);
 
             // check status if login
-            if(!$status){
+            if (!$status) {
                 session()->flash('error', 'Invalid Credentials');
                 return redirect()->back();
             }
@@ -54,6 +54,20 @@ class GuestController extends Controller
             Log::error($th->getMessage());
             session()->flash('error', 'Failed to log in, Pls Try again, If the problem persist pls contact developer!, Thank you!');
             return redirect()->back();
+        }
+    }
+
+    // logout
+    public function logout(Request $request) {
+        try {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect('/');
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            abort(500);
         }
     }
 }
