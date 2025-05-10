@@ -27,12 +27,28 @@ class ParkingLog extends Model
     }
 
     // get months
-    public static function getMonths($year) {
-        return self::select(DB::raw('DATE_FORMAT(created_at, "%M") as month'))
-                ->distinct()
-                ->whereYear('created_at', $year)
-                ->orderBy('month', 'asc')
-                ->pluck('month')
-                ->toArray();
+    public static function getMonths($year)
+    {
+        return self::select(
+            DB::raw('MONTH(created_at) as month_number'),
+            DB::raw('DATE_FORMAT(created_at, "%M") as month')
+        )
+            ->distinct()
+            ->whereYear('created_at', $year)
+            ->orderBy('month_number', 'asc')
+            ->pluck('month')
+            ->toArray();
+    }
+
+    // get data per m
+    public static function getDataPerMonthPerSlot($slot, $year)
+    {
+        return self::selectRaw('COUNT(*) AS total, MONTH(created_at) AS number_month')
+            ->where('slot_no', $slot)
+            ->whereYear('created_at', $year)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy('number_month', 'asc')
+            ->get()
+            ->toArray();
     }
 }

@@ -1,47 +1,145 @@
-<x-auth-layout title="Dashboard" title="Dashboard">
+<x-auth-layout title="Dashboard">
 
-    {{-- bs cdn --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+    {{-- CDN Dependencies --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> {{-- apex charts cdn --}}
+    {{-- style --}}
+    <style>
+        .loader {
+            animation: rotate 1s infinite;
+            height: 50px;
+            width: 50px;
+        }
 
+        .loader:before,
+        .loader:after {
+            border-radius: 50%;
+            content: "";
+            display: block;
+            height: 20px;
+            width: 20px;
+        }
+
+        .loader:before {
+            animation: ball1 1s infinite;
+            background-color: #fff;
+            box-shadow: 30px 0 0 #ff3d00;
+            margin-bottom: 10px;
+        }
+
+        .loader:after {
+            animation: ball2 1s infinite;
+            background-color: #ff3d00;
+            box-shadow: 30px 0 0 #fff;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg) scale(0.8)
+            }
+
+            50% {
+                transform: rotate(360deg) scale(1.2)
+            }
+
+            100% {
+                transform: rotate(720deg) scale(0.8)
+            }
+        }
+
+        @keyframes ball1 {
+            0% {
+                box-shadow: 30px 0 0 #ff3d00;
+            }
+
+            50% {
+                box-shadow: 0 0 0 #ff3d00;
+                margin-bottom: 0;
+                transform: translate(15px, 15px);
+            }
+
+            100% {
+                box-shadow: 30px 0 0 #ff3d00;
+                margin-bottom: 10px;
+            }
+        }
+
+        @keyframes ball2 {
+            0% {
+                box-shadow: 30px 0 0 #fff;
+            }
+
+            50% {
+                box-shadow: 0 0 0 #fff;
+                margin-top: -20px;
+                transform: translate(15px, 15px);
+            }
+
+            100% {
+                box-shadow: 30px 0 0 #fff;
+                margin-top: 0;
+            }
+        }
+
+        /* Spinner Wrapper */
+        #spinner-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        #spinner-wrapper.hidden {
+            display: none;
+        }
+    </style>
+
+    {{-- main --}}
     <main class="container-fluid mt-3 p-0">
         @if (auth()->user())
-            <h3 class="m-0">DATA VISUALIZATIONS</h3>
-            <div class="mb-2">
-                {{-- filter year --}}
-                <form action="" class="d-flex align-items-center gap-2">
-                    {{-- select year --}}
-                    <select name="year_filter" id="year-filter" class="form-select">
-                        @for ($i = Carbon\Carbon::now('Asia/Manila')->year; $i >= 1990 ; $i--)
-                            <option value="{{$i}}">{{$i}}</option>
-                        @endfor
-                    </select>
+        <h3 class="m-0">DATA VISUALIZATIONS</h3>
 
-                    {{-- btn --}}
-                    <button type="submit" class="btn btn-success text-nowrap">
-                        <i class="bi bi-check-lg" style="font-style: normal;"> Filter</i>
-                    </button>
-                </form>
-            </div>
+        {{-- Filter Form --}}
+        <div class="mb-2">
+            <form action="" class="d-flex align-items-center gap-2" id="form-filter-chart-one">
+                <select name="year_filter" id="year-filter" class="form-select">
+                    @for ($i = Carbon\Carbon::now('Asia/Manila')->year; $i >= 1990 ; $i--)
+                    <option value="{{$i}}">{{$i}}</option>
+                    @endfor
+                </select>
+                <button type="submit" class="btn btn-success text-nowrap">
+                    <i class="bi bi-check-lg" style="font-style: normal;"> Filter</i>
+                </button>
+            </form>
+        </div>
 
-            {{-- chart 1 --}}
-            <div class="row">
-                <div class="" id="chart-1"></div>
-            </div>
+        {{-- Spinner Overlay --}}
+        <div id="spinner-wrapper">
+            <div class="loader"></div>
+        </div>
+
+        {{-- Chart Area --}}
+        <div class="row">
+            <div id="chart-1"></div>
+        </div>
         @endif
 
+        {{-- Summary Stats --}}
         <h3>SUMMARY STATISTICS</h3>
         <div class="row mb-3 mt-3">
             {{-- waiting --}}
             <div class="col-lg-3 col-md-4 col-sm-6 col-xsm-6">
                 <div class="bg-white p-3 rounded shadow-lg h-100 d-flex flex-column justify-content-between">
-                    <i class="text-primary bi bi-clock-history fs-5 d-block   mb-3" style="font-style: normal;">
+                    <i class="text-primary bi bi-clock-history fs-5 d-block mb-3" style="font-style: normal;">
                         Waiting</i>
                     <h1 class="text-info m-0" id="waiting"></h1>
                 </div>
@@ -100,118 +198,87 @@
         @endif
     </main>
 
+    {{-- script --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function(){
-            // init parking slots
+        let chartOneInstance = null;
+
+        document.addEventListener('DOMContentLoaded', function () {
             getParkingSlots();
-            setInterval(() => {
-                getParkingSlots();
-            }, 1000);
+            setInterval(getParkingSlots, 1000);
 
-            // get queue
             getQueue();
-            setInterval(() => {
-                getQueue();
-            }, 1000);
+            setInterval(getQueue, 1000);
 
-            // render chart 1
             renderChartOne();
-            setTimeout(() => {
-                renderChartOne();
-            }, 5000);
+            filterChartOne();
         });
 
-        // get parking slots
-        async function getParkingSlots(){
+        async function getParkingSlots() {
             try {
-                const url = `/getParkingSlots`;
-                const response = await fetch(url, {
-                    method : 'GET',
-                    headers : {
-                        'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').content
+                const response = await fetch('/getParkingSlots', {
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     }
                 });
 
-                if(!response.ok){
-                    throw new Error("");
-                }else{
-                    const data = await response.json();
+                if (!response.ok) throw new Error();
 
-                    const row = document.getElementById('row-parking-slots-wrapper');
-                    row.innerHTML = ``;
-                    row.innerHTML += `<h3 class="m-0 text-primary">LIST OF PARKING SLOTS</h3>`;
+                const data = await response.json();
+                const row = document.getElementById('row-parking-slots-wrapper');
+                row.innerHTML = `<h3 class="m-0 text-primary">LIST OF PARKING SLOTS</h3>`;
 
-                    for (const element of data) {
-
-                        const class_status = element.status == 'occupied' ? 'text-danger' : 'text-success';
-
-                        row.innerHTML += `<div class="col-lg-3 col-md-6 col-sm-4">
-                                            <div class="bg-white rounded shadow-lg p-3 d-flex flex-column h-100 border">
-                                                <span class="text-primary text-uppercase mb-3" style="font-size: 0.9rem;">Slot No. ${element.slot_no}</span>
-                                                <i class="bi bi-truck-front-fill ${class_status} fs-5" style="font-style: normal;">
-                                                ${element.status}
-                                                </i>
-                                            </div>
-                                        </div>`;
-                    }
+                for (const element of data) {
+                    const class_status = element.status === 'occupied' ? 'text-danger' : 'text-success';
+                    row.innerHTML += `
+                        <div class="col-lg-3 col-md-6 col-sm-4">
+                            <div class="bg-white rounded shadow-lg p-3 d-flex flex-column h-100 border">
+                                <span class="text-primary text-uppercase mb-3" style="font-size: 0.9rem;">Slot No. ${element.slot_no}</span>
+                                <i class="bi bi-truck-front-fill ${class_status} fs-5" style="font-style: normal;"> ${element.status}</i>
+                            </div>
+                        </div>`;
                 }
             } catch (error) {
                 console.error(error.message);
-                toastr.error("Something Went Wrong, Pls Try Again!", "Error");
+                toastr.error("Something Went Wrong, Please Try Again!", "Error");
             }
         }
 
-        // get queue
         async function getQueue() {
             try {
-                const url = `/get-waiting-list`;
-                const response = await fetch(url);
+                const response = await fetch('/get-waiting-list');
+                if (!response.ok) throw new Error();
 
-                if(!response.ok){
-                    throw new Error("");
-                }else{
-                    const data = await response.json();
-                    const waiting = document.getElementById('waiting');
-
-                    waiting.innerHTML = ``;
-                    waiting.innerHTML += `${data.queue}`;
-                }
+                const data = await response.json();
+                document.getElementById('waiting').innerHTML = data.queue;
             } catch (error) {
                 console.error(error.message);
-                toastr.error("Something Went Wrong, Pls Try Again, Thank You", "Error");
+                toastr.error("Something Went Wrong, Please Try Again", "Error");
             }
         }
 
-        // render chart
-        async function renderChartOne(){
+        async function renderChartOne() {
+            const spinner = document.getElementById('spinner-wrapper');
+            spinner.classList.remove('hidden');
+
             try {
                 const chartOne = document.getElementById('chart-1');
                 const year = document.getElementById('year-filter').value;
 
                 const months = await getMonthsForChartOne(year);
+                const slots = await Promise.all([
+                    getMontDataPerSlots(1, year),
+                    getMontDataPerSlots(2, year),
+                    getMontDataPerSlots(3, year),
+                    getMontDataPerSlots(4, year)
+                ]);
 
-                const slot1_data = [44, 44, 44, 44, 44];
-                const slot2_data = [44, 44, 44, 44, 44];
-                const slot3_data = [44, 44, 44, 44, 44];
-                const slot4_data = [44, 44, 44, 44, 44];
+                const series = slots.map((slotData, index) => ({
+                    name: `Slot ${index + 1}`,
+                    data: slotData.map(e => parseInt(e.total))
+                }));
 
-                var options = {
-                    series: [
-                        {
-                            name: 'Slot 1',
-                            data: slot1_data
-                        }, {
-                            name: 'Slot 2',
-                            data: slot2_data
-                        }, {
-                            name: 'Slot 3',
-                            data: slot3_data
-                        },
-                        {
-                            name: 'Slot 4',
-                            data: slot4_data
-                        }
-                    ],
+                const options = {
+                    series: series,
                     chart: {
                         type: 'bar',
                         height: 350
@@ -222,7 +289,7 @@
                             columnWidth: '55%',
                             borderRadius: 5,
                             borderRadiusApplication: 'end'
-                        },
+                        }
                     },
                     dataLabels: {
                         enabled: false
@@ -233,7 +300,7 @@
                         colors: ['transparent']
                     },
                     xaxis: {
-                        categories: months,
+                        categories: months
                     },
                     yaxis: {
                         title: {
@@ -241,68 +308,52 @@
                         }
                     },
                     fill: {
-                        city: 1
+                        opacity: 1
                     },
                     tooltip: {
                         y: {
-                            formatter: function (val) {
-                            return "$ " + val + " thousands"
-                            }
+                            formatter: val => `${val} Parkings`
                         }
                     }
                 };
 
-                var chart = new ApexCharts(chartOne, options);
-                chart.render();
+                if (chartOneInstance) {
+                    chartOneInstance.destroy();
+                }
+
+                chartOneInstance = new ApexCharts(chartOne, options);
+                await chartOneInstance.render();
+
             } catch (error) {
-                toastr.error("Something Went Wrong Pls Try Again", "Error");
                 console.error(error.message);
-
+                toastr.error("Something Went Wrong. Please Try Again", "Error");
+            } finally {
+                spinner.classList.add('hidden');
             }
-
         }
 
-        // get months for chart 1
         const getMonthsForChartOne = async (year) => {
-            try {
-                const url = `/get-months-for-chart-one/${year}`;
-
-                const respons = await fetch(url, {
-                    method : 'GET',
-                    headers : {
-                        'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').content
-                    }
-                });
-
-                if(!respons.ok){
-                    throw new Error("");
-                }else{
-                    const data = await respons.json();
-
-                    return data;
-                }
-            } catch (error) {
-                throw error;
-            }
+            const response = await fetch(`/get-months-for-chart-one/${year}`, {
+                headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+            });
+            if (!response.ok) throw new Error();
+            return await response.json();
         }
 
-        const getMontDataPerSlots = async (slot) => {
-            try {
-                const response = await fetch(url, {
-                    method : 'GET',
-                    headers : {
-                        'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').content
-                    }
-                });
+        const getMontDataPerSlots = async (slot, year) => {
+            const response = await fetch(`/get-data-per-slot-per-month/${slot}/${year}`, {
+                headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+            });
+            if (!response.ok) throw new Error();
+            return await response.json();
+        }
 
-                if(!response.ok){
-                    throw new Error("");
-                }else{
-                    return ;
-                }
-            } catch (error) {
-                throw error;
-            }
+        function filterChartOne() {
+            document.getElementById('form-filter-chart-one').onsubmit = async (e) => {
+                e.preventDefault();
+                await renderChartOne();
+            };
         }
     </script>
+
 </x-auth-layout>

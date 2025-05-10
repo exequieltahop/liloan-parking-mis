@@ -47,3 +47,5 @@ Route::get('/logout', function(Request $request){
 })->name('logout');
 
 Route::get('/get-months-for-chart-one/{year}', [DashboardController::class, 'getMonthsForChart']);
+
+Route::get('/get-data-per-slot-per-month/{slot}/{year}', [DashboardController::class, 'getDataPerMonthPerSlot']);

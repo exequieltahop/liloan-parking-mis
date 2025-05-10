@@ -62,4 +62,19 @@ class DashboardController extends Controller
             return response(null, 500);
         }
     }
+
+    public function getDataPerMonthPerSlot($slot, $year) {
+        try {
+            $data = ParkingLog::getDataPerMonthPerSlot($slot, $year);
+
+            return response()->json($data);
+        } catch (\Throwable $th) {
+            /**
+             * log error
+             * response 500
+             */
+            Log::error($th->getMessage());
+            return response(null, 500);
+        }
+    }
 }
