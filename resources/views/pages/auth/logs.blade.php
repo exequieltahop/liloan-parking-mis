@@ -30,7 +30,7 @@
                             <tr>
                                 <td>{{$item->slot_no}}</td>
                                 <td>{{$item->type}}</td>
-                                <td>{{$item->created_at->format('F j, Y h:i:s a')}}</td>
+                                <td style="width: fit-content;">{{$item->created_at->format('F j, Y h:i:s a')}}</td>
                             </tr>
                         @endforeach
                     </tbody>

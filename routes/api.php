@@ -9,4 +9,5 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 
-Route::get('/log-data/{slot_no}/{status}', [SensorDataController::class, 'logData']);
+Route::post('/log-data/{slot_no}/{status}', [SensorDataController::class, 'logData']);
+Route::post('/get-data', [SensorDataController::class, 'getData']);
