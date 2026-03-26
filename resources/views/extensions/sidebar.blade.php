@@ -13,14 +13,16 @@
             </li>
 
             {{-- sign in as admin --}}
-            <li
-                class="nav-item list-group-item list-group-action list-group-secondary p-3 px-4  @if(Route::currentRouteName() == 'login')  bg-primary rounded shadow-lg @endif">
-                <a href="{{route('login')}}"
-                    class="nav-item text-decoration-none text-uppercase text-dark w-100 d-block">
-                    <i class="bi bi-box-arrow-left {{Route::currentRouteName() == 'login' ? 'text-white' : 'text-dark'}}" style="font-style: normal; letter-spacing: 0.1em; ">
-                        Sign In</i>
-                </a>
-            </li>
+            @guest
+                <li
+                    class="nav-item list-group-item list-group-action list-group-secondary p-3 px-4  @if(Route::currentRouteName() == 'login')  bg-primary rounded shadow-lg @endif">
+                    <a href="{{route('login')}}"
+                        class="nav-item text-decoration-none text-uppercase text-dark w-100 d-block">
+                        <i class="bi bi-box-arrow-left {{Route::currentRouteName() == 'login' ? 'text-white' : 'text-dark'}}" style="font-style: normal; letter-spacing: 0.1em; ">
+                            Sign In</i>
+                    </a>
+                </li>
+            @endguest
 
 
             @if (auth()->user())

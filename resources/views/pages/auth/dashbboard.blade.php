@@ -106,31 +106,31 @@
     {{-- main --}}
     <main class="container-fluid mt-3 p-0">
         @if (auth()->user())
-        <h3 class="m-0">DATA VISUALIZATIONS</h3>
+            <h3 class="m-0">DATA VISUALIZATIONS</h3>
 
-        {{-- Filter Form --}}
-        <div class="mb-2">
-            <form action="" class="d-flex align-items-center gap-2" id="form-filter-chart-one">
-                <select name="year_filter" id="year-filter" class="form-select">
-                    @for ($i = Carbon\Carbon::now('Asia/Manila')->year; $i >= 1990 ; $i--)
-                    <option value="{{$i}}">{{$i}}</option>
-                    @endfor
-                </select>
-                <button type="submit" class="btn btn-success text-nowrap">
-                    <i class="bi bi-check-lg" style="font-style: normal;"> Filter</i>
-                </button>
-            </form>
-        </div>
+            {{-- Filter Form --}}
+            <div class="mb-2">
+                <form action="" class="d-flex align-items-center gap-2" id="form-filter-chart-one">
+                    <select name="year_filter" id="year-filter" class="form-select">
+                        @for ($i = Carbon\Carbon::now('Asia/Manila')->year; $i >= 1990 ; $i--)
+                        <option value="{{$i}}">{{$i}}</option>
+                        @endfor
+                    </select>
+                    <button type="submit" class="btn btn-success text-nowrap">
+                        <i class="bi bi-check-lg" style="font-style: normal;"> Filter</i>
+                    </button>
+                </form>
+            </div>
 
-        {{-- Spinner Overlay --}}
-        <div id="spinner-wrapper">
-            <div class="loader"></div>
-        </div>
+            {{-- Spinner Overlay --}}
+            <div id="spinner-wrapper">
+                <div class="loader"></div>
+            </div>
 
-        {{-- Chart Area --}}
-        <div class="row">
-            <div id="chart-1"></div>
-        </div>
+            {{-- Chart Area --}}
+            <div class="row">
+                <div id="chart-1"></div>
+            </div>
         @endif
 
         {{-- Summary Stats --}}
@@ -209,8 +209,10 @@
             getQueue();
             setInterval(getQueue, 1000);
 
-            renderChartOne();
-            filterChartOne();
+            @auth
+                renderChartOne();
+                filterChartOne();
+            @endauth
         });
 
         async function getParkingSlots() {
@@ -243,15 +245,21 @@
             }
         }
 
+        /**
+         * get queue for parking
+         */
         async function getQueue() {
             try {
                 const response = await fetch('/get-waiting-list');
-                if (!response.ok) throw new Error();
 
+                if (!response.ok) throw new Error();
+                
                 const data = await response.json();
-                document.getElementById('waiting').innerHTML = data.queue;
+                
+                document.getElementById('waiting').innerHTML = data.waiting;
+            
             } catch (error) {
-                console.error(error.message);
+                console.error(error);
                 toastr.error("Something Went Wrong, Please Try Again", "Error");
             }
         }

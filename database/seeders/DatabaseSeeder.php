@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\ParkingLog;
+use App\Models\ParkingSlot;
 use App\Models\User;
 use Carbon\Carbon;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -16,18 +17,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
         User::create([
-            'name' => 'admin@gmail.com',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('admin123')
+            'name' => 'liloan.port.admin',
+            'email' => 'liloan.port.admin@email.com',
+            'password' => Hash::make('}!N2=556itmX'),
         ]);
+
+        for ($i = 1; $i <= 4; $i++) {
+            ParkingSlot::create([
+                'slot_no' => $i,
+            ]);
+        }
 
         $i = 1;
         $type = ['in', 'out'];

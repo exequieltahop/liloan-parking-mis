@@ -23,22 +23,23 @@ Route::post('/login-user', [GuestController::class, 'processLogin'])->name('logi
 Route::get('/logout', [GuestController::class, 'logout'])->name('logout');
 
 // initWaitingList
-Route::get('/init-waiting-list', function(){
+Route::get('/init-waiting-list', function () {
     Storage::disk('local')->put('waiting/waiting.json', json_encode([
-        'waiting' => 23
+        'waiting' => 23,
     ]));
+
     return response('success', 200);
 });
 
-Route::get('/get-waiting-list', function(){
+Route::get('/get-waiting-list', function () {
     return Storage::get('waiting/waiting.json');
 });
 
-Route::post('/input-queue', [DashboardController::class, 'inputQueue'])->name('input-queue');
+Route::post('/input-queue', [DashboardController::class, 'inputQueue'])->name('input-queue')->middleware('auth');
 
 Route::get('/logs', [LogsController::class, 'index'])->name('logs')->middleware('authChecker');
 
-Route::get('/logout', function(Request $request){
+Route::get('/logout', function (Request $request) {
     Auth::logout();
     $request->session()->invalidate();
     $request->session()->regenerateToken();

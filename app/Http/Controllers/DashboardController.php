@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ParkingLog;
 use App\Models\ParkingSlot;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,13 +24,14 @@ class DashboardController extends Controller
     public function inputQueue(Request $request)
     {
         try {
-            $status = Storage::put('waiting/waiting.json', json_encode(['queue' => (int) $request->queue]), JSON_PRETTY_PRINT);
+            $status = Storage::put('waiting/waiting.json', json_encode(['waiting' => (int) $request->queue]), JSON_PRETTY_PRINT);
 
-            if (!$status) {
-                throw new Exception("Failed to update json waiting");
+            if (! $status) {
+                throw new Exception('Failed to update json waiting');
             }
 
             session()->flash('success', 'Successfully Update Queue');
+
             return redirect()->back();
         } catch (\Throwable $th) {
             /**
@@ -40,7 +39,8 @@ class DashboardController extends Controller
              * redirect back with errors
              */
             Log::error($th->getMessage());
-            return redirect()->back()->withErrors("Something Went Wrong, Pls Try Again! Thank You");
+
+            return redirect()->back()->withErrors('Something Went Wrong, Pls Try Again! Thank You');
         }
     }
 
@@ -55,6 +55,7 @@ class DashboardController extends Controller
             return response()->json($data);
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
+
             /**
              * log errors
              * response 500
@@ -63,7 +64,8 @@ class DashboardController extends Controller
         }
     }
 
-    public function getDataPerMonthPerSlot($slot, $year) {
+    public function getDataPerMonthPerSlot($slot, $year)
+    {
         try {
             $data = ParkingLog::getDataPerMonthPerSlot($slot, $year);
 
@@ -74,6 +76,7 @@ class DashboardController extends Controller
              * response 500
              */
             Log::error($th->getMessage());
+
             return response(null, 500);
         }
     }
