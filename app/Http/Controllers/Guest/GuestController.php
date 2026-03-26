@@ -42,15 +42,10 @@ class GuestController extends Controller
     // logout
     public function logout(Request $request)
     {
-        try {
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-            return redirect('/');
-        } catch (\Throwable $th) {
-            Log::error($th->getMessage());
-            abort(500);
-        }
+        return redirect('/');
     }
 }
