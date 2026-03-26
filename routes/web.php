@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Guest\GuestController;
 use App\Http\Controllers\LogsController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -25,3 +26,11 @@ Route::post('/input-queue', [DashboardController::class, 'inputQueue'])->name('i
 Route::get('/logs', [LogsController::class, 'index'])->name('logs')->middleware('auth');
 Route::get('/get-months-for-chart-one/{year}', [DashboardController::class, 'getMonthsForChart'])->middleware('auth');
 Route::get('/get-data-per-slot-per-month/{slot}/{year}', [DashboardController::class, 'getDataPerMonthPerSlot'])->middleware('auth');
+
+// Route::get('/create-token', function (Request $request) {
+//     $token = $request->user()->createToken('nodemcu');
+
+//     return response()->json([
+//         'token' => $token,
+//     ]);
+// });

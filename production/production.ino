@@ -11,7 +11,6 @@
 // is it available if 1 yes else 0 no
 int sonic1 = 1;
 
-
 // Replace with your network credentials
 const char* ssid = "donix07";
 const char* password = "vivoY3507";
@@ -60,9 +59,14 @@ void loop() {
   Serial.print(distances);
   Serial.println(" cm");
 
-  // sonic 1
+  /*
+  EDITA KO
+  */
   if (distances < DISTANCE_THRESHOLD) {
     if (sonic1 == 1) {
+      /*
+      ALISDI AG NUMBER INTO THE SLOT NO FOR EXAMPLE MAG UPLOAD SA NODE NGA PANG PARKING SLOT 7 THEN 7.
+      */
       log_data("7", "occupied");
 
       sonic1 = 0;
@@ -70,6 +74,9 @@ void loop() {
   } else {
     if (sonic1 == 0) {
 
+      /*
+      ALISDI AG NUMBER INTO THE SLOT NO FOR EXAMPLE MAG UPLOAD SA NODE NGA PANG PARKING SLOT 7 THEN 7. SAME ABOVE
+      */
       log_data("7", "not occupied");
 
       sonic1 = 1;
