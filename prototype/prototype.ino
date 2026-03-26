@@ -183,6 +183,7 @@ void loop() {
 
     https.begin(client, serverName);
     https.addHeader("Content-Type", "application/x-www-form-urlencoded");
+    https.addHeader("Authorization", "Bearer 1|jsXVqrjlLsjOzENSnUewhkl2dTzonVcbGvxExpOf7e9d1f54");
 
     int httpCode = https.POST(postData);
 

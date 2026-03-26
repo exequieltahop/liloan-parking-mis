@@ -8,7 +8,6 @@
     {{-- csrf-token --}}
     <meta name="csrf-token" content="{{csrf_token()}}">
 
-
     <meta name="csrf-token" content="{{csrf_token()}}">
 
     <meta name="theme-color" content="#000029"/>
@@ -19,6 +18,8 @@
 
 
     <title>{{$title}}</title>
+
+    <link rel="shortcut icon" href="{{ asset('parking-logo.png') }}" type="image/x-icon">
 
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
 

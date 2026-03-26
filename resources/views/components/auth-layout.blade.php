@@ -15,6 +15,8 @@
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
     <title>{{$title}}</title>
+
+    <link rel="shortcut icon" href="{{ asset('parking-logo.png') }}" type="image/x-icon">
     {{-- vite --}}
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
 
