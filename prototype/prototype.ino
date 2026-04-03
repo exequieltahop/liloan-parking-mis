@@ -95,14 +95,14 @@ void loop() {
     } else {
       if (sonic1 == 0) {
 
-        log_data("1", "not occupied");
+        log_data("1", "not_occupied");
 
         sonic1 = 1;
       }
     }
   }
 
-  // sonic 2
+  sonic 2
   if (distances[1] != -1) {
     if (distances[1] < DISTANCE_THRESHOLD) {
       if (sonic2 == 1) {
@@ -113,7 +113,7 @@ void loop() {
       }
     } else {
       if (sonic2 == 0) {
-        log_data("2", "not occupied");
+        log_data("2", "not_occupied");
 
         sonic2 = 1;
       }
@@ -131,7 +131,7 @@ void loop() {
       }
     } else {
       if (sonic3 == 0) {
-        log_data("3", "not occupied");
+        log_data("3", "not_occupied");
 
         sonic3 = 1;
       }
@@ -149,7 +149,7 @@ void loop() {
       }
     } else {
       if (sonic4 == 0) {
-        log_data("4", "not occupied");
+        log_data("4", "not_occupied");
 
         sonic4 = 1;
       }
@@ -179,13 +179,11 @@ void loop() {
 
   // Post data with slot_no and status as form parameters
   void log_data(String slot_no, String status) {
-    String postData = "slot_no=" + slot_no + "&status=" + status;
 
-    https.begin(client, serverName);
-    https.addHeader("Content-Type", "application/x-www-form-urlencoded");
+    https.begin(client, String(serverName) + "/"+ slot_no + "/" + status);
     https.addHeader("Authorization", "Bearer 1|jsXVqrjlLsjOzENSnUewhkl2dTzonVcbGvxExpOf7e9d1f54");
 
-    int httpCode = https.POST(postData);
+    int httpCode = https.POST("");
 
     if (httpCode > 0) {
       Serial.printf("Sensor %s POST Response code: %d\n", slot_no.c_str(), httpCode);
@@ -198,3 +196,5 @@ void loop() {
 
     https.end();
   }
+
+

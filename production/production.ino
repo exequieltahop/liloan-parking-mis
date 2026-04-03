@@ -3,9 +3,13 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecure.h>
 
-// Define ultrasonic sensor pins for 4 sensors
-#define TRIG_PIN_SONIC_1 D4
-#define ECHO_PIN_SONIC_1 D3
+// Define ultrasonic sensor
+
+// #define TRIG_PIN_SONIC_1 D4
+// #define ECHO_PIN_SONIC_1 D3
+
+#define TRIG_PIN_SONIC_1 D5
+#define ECHO_PIN_SONIC_1 D6
 
 
 // is it available if 1 yes else 0 no
@@ -26,7 +30,7 @@ WiFiClientSecure client;
 HTTPClient https;
 
 // Define distance threshold (in cm)
-const long DISTANCE_THRESHOLD = 10;  // Adjust this value based on your parking sensor setup
+const long DISTANCE_THRESHOLD = 100;  // Adjust this value based on your parking sensor setup
 
 void setup() {
   Serial.begin(115200);
@@ -67,7 +71,7 @@ void loop() {
       /*
       ALISDI AG NUMBER INTO THE SLOT NO FOR EXAMPLE MAG UPLOAD SA NODE NGA PANG PARKING SLOT 7 THEN 7.
       */
-      log_data("7", "occupied");
+      log_data("5", "occupied");
 
       sonic1 = 0;
     }
@@ -77,7 +81,7 @@ void loop() {
       /*
       ALISDI AG NUMBER INTO THE SLOT NO FOR EXAMPLE MAG UPLOAD SA NODE NGA PANG PARKING SLOT 7 THEN 7. SAME ABOVE
       */
-      log_data("7", "not occupied");
+      log_data("5", "not_occupied");
 
       sonic1 = 1;
     }
@@ -105,17 +109,13 @@ void loop() {
     return distance;
   }
 
-  // Post data with slot_no and status as form parameters
+   // Post data with slot_no and status as form parameters
   void log_data(String slot_no, String status) {
-    String postData = "slot_no=" + slot_no + "&status=" + status;
 
-    Serial.println(postData);
-
-    https.begin(client, serverName);
-    https.addHeader("Content-Type", "application/x-www-form-urlencoded");
+    https.begin(client, String(serverName) + "/"+ slot_no + "/" + status);
     https.addHeader("Authorization", "Bearer 1|jsXVqrjlLsjOzENSnUewhkl2dTzonVcbGvxExpOf7e9d1f54");
 
-    int httpCode = https.POST(postData);
+    int httpCode = https.POST("");
 
     if (httpCode > 0) {
       Serial.printf("Sensor %s POST Response code: %d\n", slot_no.c_str(), httpCode);
