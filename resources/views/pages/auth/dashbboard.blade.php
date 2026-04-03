@@ -277,7 +277,10 @@
                     getMontDataPerSlots(1, year),
                     getMontDataPerSlots(2, year),
                     getMontDataPerSlots(3, year),
-                    getMontDataPerSlots(4, year)
+                    getMontDataPerSlots(4, year),
+                    getMontDataPerSlots(5, year),
+                    getMontDataPerSlots(6, year),
+                    getMontDataPerSlots(7, year)
                 ]);
 
                 const series = slots.map((slotData, index) => ({

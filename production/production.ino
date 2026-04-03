@@ -5,11 +5,11 @@
 
 // Define ultrasonic sensor
 
-// #define TRIG_PIN_SONIC_1 D4
-// #define ECHO_PIN_SONIC_1 D3
+#define TRIG_PIN_SONIC_1 D4
+#define ECHO_PIN_SONIC_1 D3
 
-#define TRIG_PIN_SONIC_1 D5
-#define ECHO_PIN_SONIC_1 D6
+// #define TRIG_PIN_SONIC_1 D5
+// #define ECHO_PIN_SONIC_1 D6
 
 
 // is it available if 1 yes else 0 no
